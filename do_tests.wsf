@@ -1,0 +1,8 @@
+<job id="tests">
+    <script language="JScript" src="json2.js" ></script>
+    <script language="JScript" src="lib.js" ></script>
+    <script language="JScript" src="config.js" ></script>
+    <script language="JScript" src="cscriptlib.js" ></script>
+    <script language="JScript" src="global.js" ></script>
+    <script language="JScript" src="do_tests.js" ></script>
+</job>

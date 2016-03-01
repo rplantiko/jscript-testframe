@@ -1,7 +1,20 @@
-{ "PMR": 
-   { "createOffer": 
+{ "PMR":
+   { "createOffer":
       { "file":"pmr/CreateOffer.groovy",
         "author":"rplantik"
       }
+    },
+  "ESO":
+    { "createAusschreibung":
+      { "file":"eso/selenium_eso_aus_create.groovy",
+        "author":"flazzare"
+      }
+    },
+  "jsUnit":
+    { "ECMA_Unit": 
+      {
+        "file":"jsunit/ECMA_Unit.groovy",
+        "author":"rplantik"
+      }      
     }  
-}   
+}
