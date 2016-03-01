@@ -1,0 +1,7 @@
+{ "PMR": 
+   { "createOffer": 
+      { "file":"pmr/CreateOffer.groovy",
+        "author":"rplantik"
+      }
+    }  
+}   
