@@ -1,4 +1,4 @@
-/* Zentrales AusfÃ¼hrungsscript fÃ¼r Tests */
+/* Zentrales Ausführungsscript für Tests */
 
 /* global WScript, fso, log, executeCommand, DIR_TESTS, DIR_PORTABLES */
 
@@ -6,10 +6,14 @@ addTimeStampToErrorLog();
 
 var results = doAllTests();
 
-if (!SURPRESS_SEND_TO_SAPDEV) 
+if (!SUPPRESS_SEND_TO_SAPDEV) {
   sendToSapdev( results );
-else 
+  sendErrorMails( results );
+  }
+else {
   appendToErrorLog( JSON.stringify( results ) );
+  sendErrorMails( results );
+}
 
 logStatistics( results );
 
@@ -23,7 +27,7 @@ function doAllTests() {
     var index = readFile( "tests/index.json" );
     var tests = JSON.parse( index );
 
-// Schleife Ã¼ber alle Tests (durch key/subkey definiert)
+// Schleife über alle Tests (durch key/subkey definiert)
     var results = {};
     var key, subkey;
     for (key in tests) {
@@ -55,7 +59,7 @@ function doTest( test ) {
 
   log.add("< starting " + test.file );
 
-// Hier sind Verzweigungen fÃ¼r verschiedene Testarten mÃ¶glich
+// Hier sind Verzweigungen für verschiedene Testarten möglich
   if (test.file.match(/\.groovy$/)) {
    result = doGroovyTest(test.file);
   }
@@ -78,10 +82,10 @@ function doGroovyTest( file ) {
     file = DIR_TESTS + file;
   }
 
-// Pfade in die bei MS Ã¼blichen Backslashes Ã¼bersetzen
+// Pfade in die bei MS üblichen Backslashes übersetzen
   file = file.replace(/\//g,"\\");
 
-// Kommando fÃ¼r Groovy aufbauen
+// Kommando für Groovy aufbauen
   var cmd = '"'+DIR_PORTABLES+'groovy.bat" ' + file;
   
   log.add("cmd: " + cmd );
@@ -98,9 +102,9 @@ function doGroovyTest( file ) {
     }
     catch (e) {
 // cscriptlib's executeCommand benutzt einen String als Error-Objekt
-// nÃ¤mlich den Inhalt von stderr, falls dieser Kanal nach AusfÃ¼hrung nichtleer ist
+// nämlich den Inhalt von stderr, falls dieser Kanal nach Ausführung nichtleer ist
 // Die Ausnahme kommt auch, wenn das Kommando mit Exit-Code ungleich 0 endet      
-       log.add( "Fehler bei Groovy-AusfÃ¼hrung: " + (e.description || e) );
+       log.add( "Fehler bei Groovy-Ausführung: " + (e.description || e) );
        result.messages += "\n" + (e.description || e);
        }
 
@@ -150,6 +154,38 @@ function sendToSapdev( results ) {
   }
 
 }
+
+function sendErrorMails( results ) {
+  for (var group in results) {
+    for (var key in results[group]) {
+      var result = results[group][key];
+//      WScript.StdOut.WriteLine( "--> " +  group + "." + key + ":\n" + JSON.stringify( result ) );
+      if (!result.passed && result.author.match(/@/)) {
+        try {
+          appendToErrorLog( 
+            "Sending error mail for " + group + "." + key + 
+            " to " + result.author + " ...");
+          var body = "Hallo,\n\nder Test " + group + "." + key + 
+            " war nicht erfolgreich.\nFolgende Fehler sind aufgetreten\n\n" + 
+            result.messages;
+          sendMail({
+            to:result.author,
+            from:"RetailCockpit@mgb.ch",
+            server:"mxswitch.mgb.ch",
+            subject:"CI-Test " + group + "." + key + " ist schlug fehl",
+            body:body,
+            exePath:DIR_PORTABLES
+            });
+          appendToErrorLog( "...done" );
+        } catch (e) {
+          appendToErrorLog( "Failed to send mail: " + (e.description || e) + "\n");
+        }
+      }
+    }
+  }    
+}
+
+
 
 function logStatistics( results ) {
   
