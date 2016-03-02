@@ -3,9 +3,17 @@
 /* global WScript, fso, log, executeCommand, DIR_TESTS, DIR_PORTABLES */
 
 addTimeStampToErrorLog();
+
 var results = doAllTests();
-sendToSapdev( results );
+
+if (!SURPRESS_SEND_TO_SAPDEV) 
+  sendToSapdev( results );
+else 
+  appendToErrorLog( JSON.stringify( results ) );
+
 logStatistics( results );
+
+// ------------------------------------------------------------------------
 
 function doAllTests() {
 
@@ -53,6 +61,8 @@ function doTest( test ) {
   }
 
   log.add("> finished " + test.file );
+  
+  if (test.author) result.author = test.author;  
 
   return result;
 
@@ -79,7 +89,7 @@ function doGroovyTest( file ) {
   try {
     result.messages = executeCommand({
       cmd:cmd
-      });
+      }).replace(/Closing Browser session...[\r\n]*/g,"");
     log.add( result.messages );
     result.passed = true;
     // War es ein JUnit-Test?

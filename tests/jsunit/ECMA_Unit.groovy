@@ -17,16 +17,19 @@ public class ECMA_Unit {
 
   @Test
   public void dynamictable() throws Exception {
+   println "Teste Script table.js für dynamische Tabellenmanipulation..."
    test_unit("testdynamictable.htm")
   }
  
   @Test
   public void global_js() throws Exception {
+   println "Teste zentrales Script global.js (inclusive minlib.js)..."
    test_unit("testGlobalJs.htm")
   }
  
   @Test
   public void global_js_with_prototype() throws Exception {
+    println "Teste zentrales Script global.js im Zusammenwirken mit Prototype..."
     test_unit("testGlobalJsWithPrototype.htm");
   }
   

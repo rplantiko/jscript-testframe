@@ -1,4 +1,4 @@
-﻿// Wiederverwendare Funktionen in der Automation (cscript //e:jscript)
+// Wiederverwendare Funktionen in der Automation (cscript //e:jscript)
 
 // Einen Befehl ausführen (mittels "exec")
 // stdin, path und environment params können übergeben werden
@@ -35,13 +35,21 @@ function executeCommand( opt ) {
     stdout += readFromTo( process.StdOut );
     stderr += readFromTo( process.StdErr );
 
-  if (process.ExitCode != 0 || stderr.match(/\S/)) {
-    throw "Fehler bei Ausführung von Kommando:\n" +
-          opt.cmd + "\n" +
-          "Abgebrochen mit Returncode " + process.ExitCode + "\n" +
-          "und/oder nichtleerem stderr: " + stderr ;
+  if (process.ExitCode != 0 || !opt.ignoreStdErr && stderr.match(/\S/)) {
+    var message = "Fehler bei Ausführung von Kommando:\n" +
+          opt.cmd + "\n";
+    if (process.ExitCode != 0) {
+      message += 
+        "Abgebrochen mit Returncode <> 0 (" + process.ExitCode + ")\n";
     }
-
+    else  {
+      message += 
+        "Abgebrochen mit nichtleerem stderr\n"
+    }
+    message += "stderr = '" + stderr + "'\n";
+    throw  message;
+    }
+    
   return stdout.replace(/\s*$/,"");;
 
   function readFromTo( channel ) {
