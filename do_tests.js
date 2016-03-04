@@ -1,6 +1,7 @@
 /* Zentrales Ausführungsscript für Tests */
 
-/* global WScript, fso, log, executeCommand, DIR_TESTS, DIR_PORTABLES */
+/* global fso, log, executeCommand, sendMail, 
+   DIR_TESTS, DIR_PORTABLES, SUPPRESS_SEND_TO_SAPDEV */
 
 addTimeStampToErrorLog();
 
@@ -12,13 +13,13 @@ if (!SUPPRESS_SEND_TO_SAPDEV) {
   }
 else {
   appendToErrorLog( JSON.stringify( results ) );
-  sendErrorMails( results );
 }
 
 logStatistics( results );
 
 // ------------------------------------------------------------------------
-
+// Ab hier Funktionen
+// ------------------------------------------------------------------------
 function doAllTests() {
 
   try {
@@ -159,7 +160,6 @@ function sendErrorMails( results ) {
   for (var group in results) {
     for (var key in results[group]) {
       var result = results[group][key];
-//      WScript.StdOut.WriteLine( "--> " +  group + "." + key + ":\n" + JSON.stringify( result ) );
       if (!result.passed && result.author.match(/@/)) {
         try {
           appendToErrorLog( 
@@ -199,13 +199,16 @@ function logStatistics( results ) {
       }     
   }
 
-  var result = "  Test failures: \n    ";
+  var result = "  Test failures: \n";
   var totalFailures = 0;
   for (group in stats) {
-    result+= group + ":" + stats[group].failed + "(" + stats[group].total + ")\n    "
+    result+= "    " + (group+"                              ").slice(30) 
+      + ": " 
+      + stats[group].failed 
+      + "(" + stats[group].total + ")\n";
     totalFailures += stats[group].failed;
   }
-  result += "Failures total: " + totalFailures + "\n";
+  result += "  Failures total : " + totalFailures + "\n";
 
   appendToErrorLog( result );
 

@@ -1,20 +1,20 @@
 { "PMR":
    { "createOffer":
       { "file":"pmr/CreateOffer.groovy",
-        "author":"rplantik"
+        "author":"ruediger.plantiko@mgb.ch"
       }
     },
   "ESO":
     { "createAusschreibung":
       { "file":"eso/selenium_eso_aus_create.groovy",
-        "author":"flazzare"
+        "author":"fabrizio.lazzaretti@mgb.ch"
       }
     },
   "jsUnit":
     { "ECMA_Unit": 
       {
         "file":"jsunit/ECMA_Unit.groovy",
-        "author":"rplantik"
+        "author":"ruediger.plantiko@mgb.ch"
       }      
     }  
 }

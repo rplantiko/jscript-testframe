@@ -50,7 +50,7 @@ function executeCommand( opt ) {
     throw  message;
     }
 
-  return stdout.replace(/\s*$/,"");;
+  return stdout.replace(/\s*$/,"");
 
   function readFromTo( channel ) {
     return channel.AtEndOfStream ? "" : channel.ReadAll();
