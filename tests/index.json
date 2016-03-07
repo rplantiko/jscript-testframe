@@ -15,6 +15,11 @@
       {
         "file":"jsunit/ECMA_Unit.groovy",
         "author":"ruediger.plantiko@mgb.ch"
-      }      
+      },
+      "UI5_qUnit":
+        {
+          "file":"jsunit/qunit.groovy",
+          "author":"ruediger.plantiko@mgb.ch"
+        }      
     }  
 }
