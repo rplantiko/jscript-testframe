@@ -1,6 +1,6 @@
 /* Zentrales Ausführungsscript für Tests */
 
-/* global fso, log, executeCommand, sendMail, 
+/* global fso, log, executeCommand, sendMail,
    DIR_TESTS, DIR_PORTABLES, SUPPRESS_SEND_TO_SAPDEV */
 
 addTimeStampToErrorLog();
@@ -39,7 +39,7 @@ function doAllTests() {
       }
     }
   } catch (e) {
-// Wenn uns der ganze Scriptrahmen um die Ohren fliegt:    
+// Wenn uns der ganze Scriptrahmen um die Ohren fliegt:
     results = {
       "GENERAL": {
         "SYSTEM": {
@@ -66,8 +66,8 @@ function doTest( test ) {
   }
 
   log.add("> finished " + test.file );
-  
-  if (test.author) result.author = test.author;  
+
+  if (test.author) result.author = test.author;
 
   return result;
 
@@ -77,8 +77,8 @@ function doGroovyTest( file ) {
 
 // Testen ist pessimistisch: By default geht gar nichts
   var result = { passed:false, messages:"" };
-  
-// Relativer Pfadname bezieht sich auf DIR_TESTS  
+
+// Relativer Pfadname bezieht sich auf DIR_TESTS
   if (!file.match(/^(?:[A-Z]:|\\)/i)) {
     file = DIR_TESTS + file;
   }
@@ -88,7 +88,7 @@ function doGroovyTest( file ) {
 
 // Kommando für Groovy aufbauen
   var cmd = '"'+DIR_PORTABLES+'groovy.bat" ' + file;
-  
+
   log.add("cmd: " + cmd );
 
   try {
@@ -104,7 +104,7 @@ function doGroovyTest( file ) {
     catch (e) {
 // cscriptlib's executeCommand benutzt einen String als Error-Objekt
 // nämlich den Inhalt von stderr, falls dieser Kanal nach Ausführung nichtleer ist
-// Die Ausnahme kommt auch, wenn das Kommando mit Exit-Code ungleich 0 endet      
+// Die Ausnahme kommt auch, wenn das Kommando mit Exit-Code ungleich 0 endet
        log.add( "Fehler bei Groovy-Ausführung: " + (e.description || e) );
        result.messages += "\n" + (e.description || e);
        }
@@ -114,11 +114,11 @@ function doGroovyTest( file ) {
 }
 
 function sendToSapdev( results ) {
-  
+
   try {
 
     var response = prepareResponse( results );
-  
+
     // Ergebnis an den Server sapdev.mits.ch senden
     var responseFromSendToServer = executeCommand({
       cmd: '"' + DIR_PORTABLES + 'curl.exe" ' +
@@ -130,13 +130,13 @@ function sendToSapdev( results ) {
            'http://sapdev.mits.ch/bin/put_test_results_ci',
       input:response
       });
-  
-    log.add( 
-      "Results sent to sapdev.mits.ch - response: " 
+
+    log.add(
+      "Results sent to sapdev.mits.ch - response: "
       + responseFromSendToServer );
 
   } catch (e) {
-    appendToErrorLog( 
+    appendToErrorLog(
       "Failed to send to http://sapdev.mits.ch\n  Exception: "
        + (e.description || e) );
   }
@@ -162,11 +162,11 @@ function sendErrorMails( results ) {
       var result = results[group][key];
       if (!result.passed && result.author.match(/@/)) {
         try {
-          appendToErrorLog( 
-            "Sending error mail for " + group + "." + key + 
+          appendToErrorLog(
+            "Sending error mail for " + group + "." + key +
             " to " + result.author + " ...");
-          var body = "Hallo,\n\nder Test " + group + "." + key + 
-            " war nicht erfolgreich.\nFolgende Fehler sind aufgetreten\n\n" + 
+          var body = "Hallo,\n\nder Test " + group + "." + key +
+            " war nicht erfolgreich.\nFolgende Fehler sind aufgetreten\n\n" +
             result.messages;
           sendMail({
             to:result.author,
@@ -182,29 +182,29 @@ function sendErrorMails( results ) {
         }
       }
     }
-  }    
+  }
 }
 
 
 
 function logStatistics( results ) {
-  
+
   var stats = {}, group;
 
   for (group in results) {
-    stats[group] = {total:0, failed:0};    
+    stats[group] = {total:0, failed:0};
     for (var test in results[group]) {
       stats[group].total++;
       if (!results[group][test].passed) stats[group].failed++;
-      }     
+      }
   }
 
   var result = "  Test failures: \n";
   var totalFailures = 0;
   for (group in stats) {
-    result+= "    " + (group+"                              ").slice(30) 
-      + ": " 
-      + stats[group].failed 
+    result+= "    " + (group+"                              ").slice(0,30)
+      + ": "
+      + stats[group].failed
       + "(" + stats[group].total + ")\n";
     totalFailures += stats[group].failed;
   }
@@ -217,7 +217,7 @@ function logStatistics( results ) {
 
 
 function addTimeStampToErrorLog() {
-  appendToErrorLog( "--- " + new Date() ); 
+  appendToErrorLog( "--- " + new Date() );
 }
 
 function appendToErrorLog( text ) {
