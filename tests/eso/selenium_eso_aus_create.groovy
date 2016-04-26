@@ -41,12 +41,12 @@ public class SeleniumEsoAusCreate {
         ausschreibungFillHead();
         //add lief
         ausschreibungAddLief();
-        ausschreibungSave();
+        ausschreibungSave(false);
         //add pos
         ausschreibungNavigateToPos();
         ausschreibungEdit();
         ausschreibungAddPos();
-        ausschreibungSave();
+        ausschreibungSave(true);
         //freigeben
         ausschreibungEdit();
         ausschreibungRelase();
@@ -160,19 +160,6 @@ public class SeleniumEsoAusCreate {
         driver.findElement(By.id("lifnr_0001")).clear();
         driver.findElement(By.id("lifnr_0001")).sendKeys("10001027");
 
-//        Lieferanten via Autocomp auszuwählen ist ein grosses risiko
-//        for (int second = 0;; second++) {
-//            if (second >= 60) fail("timeout");
-//            try { if (isElementPresent(By.cssSelector("ul.ui-autocomplete > li:first"))) break; } catch (Exception e) {}
-//            Thread.sleep(1000);
-//        }
-//
-//        driver.findElement(By.cssSelector("ul.ui-autocomplete > li:first")).click();
-//        for (int second = 0;; second++) {
-//            if (second >= 60) fail("timeout");
-//            try { if ("value=ALBIS-BETTWARENFABR.AG".equals(driver.findElement(By.id("lifnr_0001txt")).getAttribute("value"))) break; } catch (Exception e) {}
-//            Thread.sleep(1000);
-//        }
 
 //        -->Lieferanten eintippen und panel neu laden
         ausschreibungSelectPanelLief();
@@ -183,9 +170,28 @@ public class SeleniumEsoAusCreate {
     }
 
 
-    protected void ausschreibungSave(){
+    protected void ausschreibungSave(boolean warningPossible){
         driver.findElement(By.id("btn_SAVE")).click();
-        dialogOk();
+        boolean warning = false;
+        if(warningPossible){
+            for (int second = 0;; second++) {
+                Thread.sleep(1000);
+                if (second >= 30){
+                    //keine Warnung aufgetreten
+                    break;
+                }
+                try {
+                    if (present( css: "#message .warning_icon")){
+                        click css: ".ui-dialog .ui-dialog-buttonset button"
+                        warning = true;
+                        break;
+                    }
+                }catch (Exception e) {}
+            }
+        }
+        if(!warning){
+            dialogOk();
+        }
     }
 
     protected void dialogOk(){
@@ -223,30 +229,6 @@ public class SeleniumEsoAusCreate {
       return true;
     } catch (NoSuchElementException e) {
       return false;
-    }
-  }
-
-  private boolean isAlertPresent() {
-    try {
-      driver.switchTo().alert();
-      return true;
-    } catch (NoAlertPresentException e) {
-      return false;
-    }
-  }
-
-  private String closeAlertAndGetItsText() {
-    try {
-      Alert alert = driver.switchTo().alert();
-      String alertText = alert.getText();
-      if (acceptNextAlert) {
-        alert.accept();
-      } else {
-        alert.dismiss();
-      }
-      return alertText;
-    } finally {
-      acceptNextAlert = true;
     }
   }
 }

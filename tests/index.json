@@ -11,7 +11,7 @@
       }
     },
   "jsUnit":
-    { "ECMA_Unit": 
+    { "ECMA_Unit":
       {
         "file":"jsunit/ECMA_Unit.groovy",
         "author":"ruediger.plantiko@mgb.ch"
@@ -20,6 +20,18 @@
         {
           "file":"jsunit/qunit.groovy",
           "author":"ruediger.plantiko@mgb.ch"
-        }      
-    }  
+        }
+    },
+  "SRS": {
+    "navigation_basic_d12":
+        {
+          "file":"srs/navigation_basic_d12.groovy",
+          "author":"ruediger.plantiko@mgb.ch"
+        },
+    "navigation_basic_d11":
+        {
+          "file":"srs/navigation_basic_d11.groovy",
+          "author":"ruediger.plantiko@mgb.ch"
+        }
+  }
 }

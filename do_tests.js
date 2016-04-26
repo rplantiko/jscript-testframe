@@ -160,7 +160,7 @@ function sendErrorMails( results ) {
   for (var group in results) {
     for (var key in results[group]) {
       var result = results[group][key];
-      if (!result.passed && result.author.match(/@/)) {
+      if (!result.passed && result.author && result.author.match(/@/)) {
         try {
           appendToErrorLog(
             "Sending error mail for " + group + "." + key +
@@ -172,7 +172,7 @@ function sendErrorMails( results ) {
             to:result.author,
             from:"RetailCockpit@mgb.ch",
             server:"mxswitch.mgb.ch",
-            subject:"CI-Test " + group + "." + key + " ist schlug fehl",
+            subject:"CI-Test " + group + "." + key + " schlug fehl",
             body:body,
             exePath:DIR_PORTABLES
             });
