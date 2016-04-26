@@ -34,7 +34,7 @@ public class SeleniumEsoAusCreate {
     @Test
     public void testSeleniumEsoAusCreate() throws Exception {
         //login
-        login("auth_da3_tst_ectr_cm.html");//"tst_ectr_cm","ectr2014"
+        login("auth_da3_tst_ectr_cm.html");
         startKachel("ka01")
         //create
         ausschreibungCreate();
@@ -102,9 +102,7 @@ public class SeleniumEsoAusCreate {
 
         //date from
         driver.findElement(By.id("head_StartDate_from")).click();
-        //Leer lassen -> wird automatisch gefüllt
-//        type id: "head_StartDate_from", value: startDate.format(dateFormat);
-//        driver.findElement(By.cssSelector(".ui-state-highlight")).click();
+
         //anderes feld anklicken, damit der datapicker verschwindet
         driver.findElement(By.id("head_starttim")).click();
 
@@ -112,17 +110,14 @@ public class SeleniumEsoAusCreate {
         waitFor { present css: "#head_StartDate_to"}
         driver.findElement(By.id("head_StartDate_to")).click();
         type id: "head_StartDate_to", value: endDate.format(dateFormat);
-//        driver.findElement(By.cssSelector(".ui-state-highlight")).click();
+
         //anderes feld anklicken, damit der datapicker verschwindet
         driver.findElement(By.id("head_endtim")).click();
 
         //sourcing
         driver.findElement(By.id("button_addsor")).click();
-        //new Select(driver.findElement(By.id("sornr_0001"))).selectByValue("8000000000");
         select  id: "sornr_0001",
                 value: "8000000000"
-
-//        new Select(driver.findElement(By.id("soransnam_0001"))).selectByValue("TST_ECTR_HK");
 
         select  id: "soransnam_0001",
                 value: "TST_ECTR_HK"
@@ -209,13 +204,6 @@ public class SeleniumEsoAusCreate {
         driver.findElement(By.id("matnr_0001")).clear();
         driver.findElement(By.id("matnr_0001")).sendKeys("804500800000");
 
-//        Autocomp macht nur Probleme - one auswahl vortfahren
-//        for (int second = 0;; second++) {
-//            if (second >= 60) fail("timeout");
-//            try { if (isElementPresent(By.cssSelector("ul.ui-autocomplete > li:first"))) break; } catch (Exception e) {}
-//            Thread.sleep(1000);
-//        }
-//        driver.findElement(By.cssSelector("ul.ui-autocomplete > li:first")).click();
     }
 
   @After
