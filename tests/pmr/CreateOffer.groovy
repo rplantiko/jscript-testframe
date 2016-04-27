@@ -1,4 +1,4 @@
-// SeleniumHelper.groovy befindet sich in C:\Users\rplantik\.groovy\classes
+// SeleniumHelper.groovy befindet sich in %USERPROFILE%\.groovy\classes
 
 import java.util.Map;
 import org.openqa.selenium.*;

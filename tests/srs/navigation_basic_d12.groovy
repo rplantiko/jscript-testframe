@@ -1,4 +1,4 @@
-// SeleniumHelper.groovy befindet sich in C:\Users\rplantik\.groovy\classes
+// SeleniumHelper.groovy befindet sich in %USERPROFILE%\.groovy\classes
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -87,9 +87,7 @@ public class NavigationBasicD12 {
       gotoURL(selenium.baseURL+"/sap/bc/bsp/sap/zsrs_intro/intro.do")
       waitFor { pageLoaded() }
       
-      println "· " + application.title
-      def linkSelector = /a[href="${application.href}"]/
-            
+      def linkSelector = /a[href="${application.href}"]/            
        
       verify {  present css:linkSelector }
       click   css:linkSelector 
